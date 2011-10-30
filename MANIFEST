@@ -11,7 +11,7 @@ t/120-string-cuss.t
 t/125-new.t
 t/130-new-merge.t
 t/135-crash.t
-t/140-crank.t
+t/140-crank-skip.t
 t/145-prepend.t
 t/150-key.t
 META.yml
