@@ -3,7 +3,7 @@ Changes
 lib/Error/Base.pm
 MANIFEST
 README
-t/010.load.t
+t/010-load.t
 t/105-paired.t
 t/110-trace.t
 t/115-cuss.t
@@ -14,5 +14,7 @@ t/135-crash.t
 t/140-crank-skip.t
 t/145-prepend.t
 t/150-key.t
+t/155-interpolate.t
+t/160-crash-late.t
 META.yml
 META.json

@@ -54,7 +54,11 @@
    "provides" : {
       "Error::Base" : {
          "file" : "lib/Error/Base.pm",
-         "version" : "v0.0.4"
+         "version" : "v0.1.0"
+      },
+      "Error::Base::Late" : {
+         "file" : "lib/Error/Base.pm",
+         "version" : 0
       }
    },
    "release_status" : "stable",
@@ -66,5 +70,5 @@
          "url" : "http://github.com/Xiong/error-base"
       }
    },
-   "version" : "v0.0.4"
+   "version" : "v0.1.0"
 }
