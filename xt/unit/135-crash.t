@@ -9,49 +9,57 @@ my $QRFALSE      = $Error::Base::QRFALSE   ;
 
 #----------------------------------------------------------------------------#
 
-#~         -end    => 1,   # # # # # # # END TESTING HERE # # # # # # # # # 
-
 my @td  = (
-    
     {
-        -case   => 'base-late',
-        -args   => [ 
-                    -base   => 'a $zig b', 
-                    -quiet  => 1, 
-                    foo     => 'bar' 
-                ],
-        -merge  => [                     
-                    '$zig'  => 'zag', 
-                ],
-        -die    => qr/a zag b$/,
+        -case   => 'null',              # stringified normal return
+        -die    => words(qw/ 
+                    undefined error 
+                    eval line crash 
+                    ____ line crash 
+                /),
     },
     
     {
-        -case   => 'type-late',
-        -args   => [ 
-                    -type   => 'a $zig b', 
-                    -quiet  => 1, 
-                    foo     => 'bar' 
-                ],
-        -merge  => [                     
-                    '$zig'  => 'zag', 
-                ],
-        -die    => qr/a zag b$/,
+#~         -end    => 1,   # # # # # # # END TESTING HERE # # # # # # # # # 
+        -case   => 'null-fuzz',         
+        -fuzz   => words(qw/ 
+                    bless 
+                    frames 
+                        eval undef file crash line package main sub eval
+                        bottom sub ___ 
+                    lines
+                        undefined error
+                    error base
+                /),
     },
     
     {
-        -case   => 'pronto-late',
+        -case   => 'quiet',             # emit error text, no backtrace
         -args   => [ 
-                        'a $zig b', 
+                    'Bazfaz: ',
                     -quiet  => 1, 
-                    foo     => 'bar' 
+                    -base   => 'Foobar error ', 
+                    foo     => 'bar', 
                 ],
-        -merge  => [                     
-                    '$zig'  => 'zag', 
-                ],
-        -die    => qr/a zag b$/,
+        -die    => words(qw/
+                    foobar error bazfaz
+                /),
     },
     
+    {
+        -case   => 'quiet-fuzz',        # verify no backtrace
+        -args   => [ 
+                    'Bazfaz: ',
+                    -quiet  => 1, 
+                    -base   => 'Foobar error ', 
+                    foo     => 'bar', 
+                ],
+        -fuzz   => words(qw/ 
+                    lines
+                        foobar error bazfaz
+                    quiet
+                /),
+    },
     
     
 );
@@ -59,7 +67,7 @@ my @td  = (
 #----------------------------------------------------------------------------#
 
 my $tc          ;
-my $base        = 'Error-Base: crash-late: ';
+my $base        = 'Error-Base: crash(): ';
 my $diag        = $base;
 my @rv          ;
 my $got         ;
@@ -83,7 +91,6 @@ for (@td) {
 sub exck {
     my $t           = shift;
     my @args        = eval{ @{ $t->{-args} } };
-    my @merge       = eval{ @{ $t->{-merge} } };
     my $die         = $t->{-die};
     my $want        = $t->{-want};
     my $deep        = $t->{-deep};
@@ -91,15 +98,14 @@ sub exck {
     
     $diag           = 'execute';
     @rv             = eval{ 
-        my $self        = Error::Base->new(@args);
-        $self->crash(@merge);
+        Error::Base->crash(@args); 
     };
     pass( $diag );          # test didn't blow up
 #~     note($@) if $@;         # did code under test blow up?
     
     if    ($die) {
         $diag           = 'should-throw-string';
-        $got            = lc "$@";
+        $got            = lc $@;
         $want           = $die;
         like( $got, $want, $diag );
     }

@@ -9,49 +9,58 @@ my $QRFALSE      = $Error::Base::QRFALSE   ;
 
 #----------------------------------------------------------------------------#
 
-#~         -end    => 1,   # # # # # # # END TESTING HERE # # # # # # # # # 
-
 my @td  = (
-    
     {
-        -case   => 'base-late',
-        -args   => [ 
-                    -base   => 'a $zig b', 
-                    -quiet  => 1, 
-                    foo     => 'bar' 
-                ],
-        -merge  => [                     
-                    '$zig'  => 'zag', 
-                ],
-        -die    => qr/a zag b$/,
+        -case   => 'null',
+        -want   => words(qw/ 
+                    in exck 
+                    in anon 
+                    in subtest
+                    in ___ line trace 
+                /),
     },
     
     {
-        -case   => 'type-late',
-        -args   => [ 
-                    -type   => 'a $zig b', 
-                    -quiet  => 1, 
-                    foo     => 'bar' 
-                ],
-        -merge  => [                     
-                    '$zig'  => 'zag', 
-                ],
-        -die    => qr/a zag b$/,
+        -case   => 'top-0',
+        -args   => [ {}, -top => 0 ],   # dummy $self
+        -want   => words(qw/ 
+                    in eval 
+                    in exck 
+                    in anon 
+                    in subtest
+                    in ___ line trace 
+                /),
     },
     
     {
-        -case   => 'pronto-late',
-        -args   => [ 
-                        'a $zig b', 
-                    -quiet  => 1, 
-                    foo     => 'bar' 
-                ],
-        -merge  => [                     
-                    '$zig'  => 'zag', 
-                ],
-        -die    => qr/a zag b$/,
+        -case   => 'top-1',
+        -args   => [ {}, -top => 1 ],   # dummy $self
+        -want   => words(qw/ 
+                    in exck 
+                    in anon 
+                    in subtest
+                    in ___ line trace 
+                /),
     },
     
+    {
+        -case   => 'top-2',
+        -args   => [ {}, -top => 2 ],   # dummy $self
+        -want   => words(qw/ 
+                    in anon 
+                    in subtest
+                    in ___ line trace 
+                /),
+    },
+    
+    {
+        -case   => 'top-4',
+        -args   => [ {}, -top => 4 ],   # dummy $self
+        -want   => words(qw/ 
+                    in subtest
+                    in ___ line trace 
+                /),
+    },
     
     
 );
@@ -59,7 +68,7 @@ my @td  = (
 #----------------------------------------------------------------------------#
 
 my $tc          ;
-my $base        = 'Error-Base: crash-late: ';
+my $base        = 'Error-Base: _trace(): ';
 my $diag        = $base;
 my @rv          ;
 my $got         ;
@@ -72,7 +81,6 @@ my $Verbose     = 0;
 #~    $Verbose++;
 
 for (@td) {
-    last if $_->{-end};
     $tc++;
     my $case        = $base . $_->{-case};
     
@@ -83,39 +91,37 @@ for (@td) {
 sub exck {
     my $t           = shift;
     my @args        = eval{ @{ $t->{-args} } };
-    my @merge       = eval{ @{ $t->{-merge} } };
     my $die         = $t->{-die};
     my $want        = $t->{-want};
     my $deep        = $t->{-deep};
     my $fuzz        = $t->{-fuzz};
     
     $diag           = 'execute';
-    @rv             = eval{ 
-        my $self        = Error::Base->new(@args);
-        $self->crash(@merge);
-    };
+    @rv             = eval{ Error::Base::_trace(@args) };
     pass( $diag );          # test didn't blow up
-#~     note($@) if $@;         # did code under test blow up?
+    note($@) if $@;         # did code under test blow up?
     
     if    ($die) {
-        $diag           = 'should-throw-string';
-        $got            = lc "$@";
+        $diag           = 'should throw';
+        $got            = $@;
         $want           = $die;
         like( $got, $want, $diag );
     }
-    elsif ($fuzz) {
-        $diag           = 'should-throw-fuzzily';
-        $got            = join qq{\n}, explain \$@;
-        $want           = $fuzz;
+    elsif ($want) {
+        $diag           = 'return-like';
+        $got            = join qq{\n}, @rv;
         like( $got, $want, $diag );
-    }
+    } 
     else {
-        fail('Test script failure: unimplemented gimmick.');
+        $diag           = 'return-is';
+        $got            = join qq{\n}, @rv;
+        $want           = join qq{\n}, @args;
+        is( $got, $want, $diag );
     };
 
     # Extra-verbose dump optional for test script debug.
     if ( $Verbose >= 1 ) {
-        note( 'explain: ', explain \$@      );
+        note( 'explain: ', explain \@rv     );
         note( ''                            );
     };
     
@@ -133,7 +139,6 @@ sub words {                         # sloppy match these strings
     my $regex   = q{};
     
     for (@words) {
-        $_      = lc $_;
         $regex  = $regex . $_ . '.*';
     };
     
