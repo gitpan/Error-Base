@@ -58,6 +58,7 @@ xt/otmods/210-acc.t
 xt/otmods/filehomedir-01.t
 xt/otmods/filesharedir-01.t
 xt/subst/140-crank-skip.t
+xt/syn/200-load-optional.t
 xt/syn/210-syn-intro.t
 xt/syn/215-cookbook.t
 xt/unit/105-paired.t
