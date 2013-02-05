@@ -4,7 +4,7 @@
       "Xiong Changnian <xiong@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112621",
+   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
    "keywords" : [
       "devel",
       "development",
@@ -45,21 +45,21 @@
             "Test::Trap" : "v0.2.1"
          },
          "requires" : {
-            "Scalar::Util" : 0,
-            "overload" : 0,
+            "Scalar::Util" : "0",
+            "overload" : "0",
             "perl" : "5.008008",
-            "version" : "0.94"
+            "version" : "0.88"
          }
       }
    },
    "provides" : {
       "Error::Base" : {
          "file" : "lib/Error/Base.pm",
-         "version" : "v0.1.4"
+         "version" : "v1.0.0"
       },
       "Error::Base::Cookbook" : {
          "file" : "lib/Error/Base/Cookbook.pm",
-         "version" : "v0.1.4"
+         "version" : "v1.0.0"
       },
       "Error::Base::Late" : {
          "file" : "lib/Error/Base.pm",
@@ -69,11 +69,11 @@
    "release_status" : "stable",
    "resources" : {
       "license" : [
-         "http://www.perlfoundation.org/artistic_license_2_0"
+         "http://opensource.org/licenses/artistic-license-2.0.php"
       ],
       "repository" : {
          "url" : "http://github.com/Xiong/error-base"
       }
    },
-   "version" : "v0.1.4"
+   "version" : "v1.0.0"
 }
