@@ -16,10 +16,10 @@ t/130-new-merge.t
 t/135-crash.t
 t/140-crank-skip.t
 t/145-prepend.t
-t/150-key.t
 t/155-interpolate.t
 t/157-self-late.t
 t/160-crash-late.t
+t/165-expand-ref.t
 t/210-syn-intro.t
 t/211-mesg-aryref.t
 t/215-cookbook.t
@@ -37,6 +37,7 @@ xt/acc/505-acc-get.t
 xt/acc/510-acc-put.t
 xt/disable/015-msg.t
 xt/disable/140-crank.t
+xt/disable/150-key.t
 xt/err/310-ex-backtrace.t
 xt/err/315-no-self.t
 xt/err/320-bad-reftype.t
@@ -54,10 +55,10 @@ xt/go/130-new-merge.t
 xt/go/135-crash.t
 xt/go/140-crank-skip.t
 xt/go/145-prepend.t
-xt/go/150-key.t
 xt/go/155-interpolate.t
 xt/go/157-self-late.t
 xt/go/160-crash-late.t
+xt/go/165-expand-ref.t
 xt/go/210-syn-intro.t
 xt/go/211-mesg-aryref.t
 xt/go/215-cookbook.t
@@ -86,9 +87,9 @@ xt/unit/130-new-merge.t
 xt/unit/135-crash.t
 xt/unit/140-crank.t
 xt/unit/145-prepend.t
-xt/unit/150-key.t
 xt/unit/155-interpolate.t
 xt/unit/157-self-late.t
 xt/unit/160-crash-late.t
+xt/unit/165-expand-ref.t
 META.yml
 META.json

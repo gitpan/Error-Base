@@ -9,91 +9,78 @@ my $QRFALSE      = $Error::Base::QRFALSE   ;
 
 #----------------------------------------------------------------------------#
 
-my $err     = Error::Base->new(
-                -base       => '',
-                _error1     => ' 1st error',
-                _error2     => ' 2nd error',
-            );
+my $foo         = 'foo';
+
+#----------------------------------------------------------------------------#
 
 my @td  = (
     {
-        -case   => 'key-fuzz',          # key only
-        -args   => [ 
-                    foo     => 'bar',
-                    -key    => '_error1', 
+        -case   => 'null',              # pass no args
+        -args   => [
                 ],
-        -fuzz   => words(qw/ 
-                    bless 
-                        lines 1st error
-                    error base
+        -deep   => [
+                    undef,
+                ],
+    },
+    
+    {
+        -case   => 'foo',              # simple scalar
+        -args   => [
+                    'foo',
+                ],
+        -deep   => [
+                    'foo',
+                ],
+    },
+    
+    {
+        -case   => 'foo-ref',          # scalar reference
+        -args   => [
+                    \$foo,
+                ],
+        -deep   => [
+                    'foo',
+                ],
+    },
+    
+    {
+        -case   => 'aryref',           # array reference *joins*
+        -args   => [
+                    [ 1, 2, 3],
+                ],
+        -deep   => [
+                    '1 2 3',
+                ],
+    },
+    
+    {
+        -case   => 'hashref',           # hash reference *fatals*
+        -args   => [
+                    { foo => 'bar' },
+                ],
+        -die    => words(qw/ 
+                    error base internal error bad reftype
                 /),
     },
     
     {
-#~         -end    => 1,   # # # # # # # END TESTING HERE # # # # # # # # # 
-        -case   => 'err-fuzz',          # emit error text
-        -args   => [ 
-                    'Foobar error', 
-                    foo     => 'bar', 
-                    -key    => '_error1', 
+        -case   => 'coderef',           # code reference *fatals*
+        -args   => [
+                    sub { return },
                 ],
-        -fuzz   => words(qw/ 
-                    bless 
-                        lines foobar error 1st error
-                    error base
+        -die    => words(qw/ 
+                    error base internal error bad reftype
                 /),
     },
     
-    {
-        -case   => 'text-fuzz',         # emit error text, named arg
-        -args   => [ 
-                    -base   => 'Foobar error ', 
-                    foo     => 'bar', 
-                    -key    => '_error1', 
-                ],
-        -fuzz   => words(qw/ 
-                    bless 
-                        lines foobar error
-                    error base
-                /),
-    },
-    
-    {
-        -case   => 'text-both-fuzz',    # emit error text, both ways
-        -args   => [ 
-                    'Bazfaz: ', 
-                    -base   => 'Foobar error ', 
-                    foo     => 'bar', 
-                    -key    => '_error1', 
-                ],
-        -fuzz   => words(qw/ 
-                    bless 
-                        lines foobar error bazfaz in
-                    error base
-                /),
-    },
-    
-    {
-        -case   => 'text-both',         # emit error text, stringified normal
-        -args   => [ 
-                    'Bazfaz: ', 
-                    -base   => 'Foobar error ', 
-                    foo     => 'bar', 
-                    -key    => '_error1', 
-                ],
-        -want   => words(qw/ 
-                    foobar error bazfaz
-                    eval line key 
-                    ____ line key
-                /),
-    },
+#~     { -end    => 1 },   # # # # # # # END TESTING HERE # # # # # # # # #     
     
 );
 
 #----------------------------------------------------------------------------#
 
 my $tc          ;
-my $base        = 'Error-Base: -key: ';
+my $base        = 'Error-Base: _expand_ref(): ';
 my $diag        = $base;
 my @rv          ;
 my $got         ;
@@ -124,7 +111,7 @@ sub exck {
     
     $diag           = 'execute';
     @rv             = eval{ 
-        $err->cuss(@args); 
+        @rv = Error::Base::_expand_ref(@args); 
     };
     pass( $diag );          # test didn't blow up
     note($@) if $@;         # did code under test blow up?
