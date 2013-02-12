@@ -30,10 +30,10 @@ name: Error-Base
 provides:
   Error::Base:
     file: lib/Error/Base.pm
-    version: v1.0.1
+    version: v1.0.2
   Error::Base::Cookbook:
     file: lib/Error/Base/Cookbook.pm
-    version: v1.0.1
+    version: v1.0.2
   Error::Base::Late:
     file: lib/Error/Base.pm
     version: 0
@@ -44,8 +44,8 @@ requires:
   Scalar::Util: 0
   overload: 0
   perl: 5.008008
-  version: 0.88
+  version: 0.99
 resources:
-  license: http://opensource.org/licenses/artistic-license-2.0.php
+  license: http://www.perlfoundation.org/artistic_license_2_0
   repository: http://github.com/Xiong/error-base
-version: v1.0.1
+version: v1.0.2

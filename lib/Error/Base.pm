@@ -9,7 +9,7 @@ package Error::Base;
 use 5.008008;
 use strict;
 use warnings;
-use version; our $VERSION = qv('v1.0.1');
+use version; our $VERSION = qv('v1.0.2');
 
 # Core modules
 use overload                    # Overload Perl operations
@@ -801,7 +801,7 @@ Error::Base - Simple structured errors with full backtrace
 
 =head1 VERSION
 
-This document describes Error::Base version v1.0.1
+This document describes Error::Base version v1.0.2
 
 =head1 WHAT'S NEW
 
@@ -1236,7 +1236,7 @@ There are no non-core dependencies.
 
 =item 
 
-L<version|version> 0.88    E<nbsp>E<nbsp>E<nbsp>E<nbsp> # Perl extension for Version Objects
+L<version|version> 0.99    E<nbsp>E<nbsp>E<nbsp>E<nbsp> # Perl extension for Version Objects
 
 =item 
 

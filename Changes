@@ -1,5 +1,9 @@
 Revision history for Error-Base
 
+v1.0.2  2013-02-11 23:02:12
+    - Upgrade version.pm requirement to 0.99
+    - Yes, this is necessary.
+
 v1.0.1  2013-02-07 13:31:10
     - Fix Test::Deep smoke failures.
     - 100% test and POD coverage.
